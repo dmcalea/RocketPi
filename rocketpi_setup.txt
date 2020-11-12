@@ -1,0 +1,31 @@
+sudo apt-get install install gpsd gpsd-clients python-gps
+
+sudo systemctl stop gpsd.socket
+sudo systemctl disable gpsd.socket
+
+sudo nano /boot/cmdline.txt
+
+first line: dwc_otg.lpm_enable=0 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait (**keep everything after rootwait**)
+second line: uart_enable=1
+
+sudo reboot
+
+sudo raspi-config
+interfacing > serial > login shell: no > hardware enabled: yes > apply
+
+sudo reboot
+
+create gpsd_start.sh on Desktop
+
+line 1: sudo killall gpsd
+line 2: sudo gpsd /dev/ttyS0 -F /var/run/gpsd.sock
+
+chmod +x Desktop/gpsd_start.sh
+
+sudo nano ~/.config/lxsession/LXDE-pi/autostart
+
+last line: @Desktop/gpsd_start.sh
+
+sudo reboot
+
+cgps -s (less data) OR gpsmon (more data)
